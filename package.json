@@ -31,7 +31,7 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "Toogle Ruler",
+      "title": "Toggle Ruler",
       "properties": {
         "toggleRuler.rulerPosition": {
           "type": "number",
