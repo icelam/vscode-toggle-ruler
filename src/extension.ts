@@ -2,14 +2,17 @@ import * as vscode from 'vscode';
 
 /** Key of VS Code setting which enables rulers. */
 const RULER_VSCODE_SETTING_KEY = 'editor.rulers';
-/** Key of extension setting that set the number of monospace characters at which this editor ruler will render. */
+/**
+ * Key of extension setting that set the number of monospace characters at which
+ * this editor ruler will render.
+ */
 const RULER_POSITION_SETTING_KEY = 'toggleRuler.rulerPosition';
 /** Whether this extension should modify VS Code globally. */
 const IS_SETTING_GLOBAL = true;
 
 async function toggleSetting() {
   try {
-    let config = vscode.workspace.getConfiguration();
+    const config = vscode.workspace.getConfiguration();
 
     const rulerPosition = config.get(RULER_POSITION_SETTING_KEY);
     if (!rulerPosition) {
@@ -28,14 +31,14 @@ async function toggleSetting() {
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to toggle editor ruler. Reason: ${(error as Error).message}`
+      `Failed to toggle editor ruler. Reason: ${(error as Error).message}`,
     );
   }
 }
 
 async function updateRulerPosition() {
   try {
-    let config = vscode.workspace.getConfiguration();
+    const config = vscode.workspace.getConfiguration();
 
     const rulerPosition = config.get(RULER_POSITION_SETTING_KEY);
     if (!rulerPosition) {
@@ -48,17 +51,17 @@ async function updateRulerPosition() {
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to update position of editor ruler. Reason: ${(error as Error).message}`
+      `Failed to update position of editor ruler. Reason: ${(error as Error).message}`,
     );
   }
 }
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Extension "Toggle Ruler" is activated.');
-  let commandDisposable = vscode.commands.registerCommand('toggleRuler.toggle', toggleSetting);
+  const commandDisposable = vscode.commands.registerCommand('toggleRuler.toggle', toggleSetting);
   context.subscriptions.push(commandDisposable);
 
-  let cofigChangeDisposable = vscode.workspace.onDidChangeConfiguration(e => {
+  const cofigChangeDisposable = vscode.workspace.onDidChangeConfiguration(() => {
     vscode.workspace.onDidChangeConfiguration(updateRulerPosition);
   });
 
