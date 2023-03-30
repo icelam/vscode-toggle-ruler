@@ -9,6 +9,10 @@
     "name": "Ice Lam",
     "url": "https://github.com/icelam"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icelam/vscode-toggle-ruler"
+  },
   "license": "MIT",
   "engines": {
     "vscode": "^1.76.0"
