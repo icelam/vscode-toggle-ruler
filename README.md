@@ -1,4 +1,7 @@
-# Toggle Ruler Extension for Visual Studio Code
+<p align="center">
+    <img alt="Deno Wikipedia CLI" src="./images/icon.png" width="128" />
+</p>
+<h1 align="center">Toggle Ruler Extension for Visual Studio Code</h1>
 
 ![Demo](./docs/images/demo.gif)
 
