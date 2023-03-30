@@ -17,7 +17,11 @@ async function toggleSetting() {
 		}
 
 		const currentRulerSetting = config.get(RULER_VSCODE_SETTING_KEY);
-		if (!currentRulerSetting || !Array.isArray(currentRulerSetting) || currentRulerSetting.length === 0) {
+		if (
+			!currentRulerSetting
+			|| !Array.isArray(currentRulerSetting)
+			|| currentRulerSetting.length === 0
+		) {
 			await config.update(RULER_VSCODE_SETTING_KEY, [rulerPosition], IS_SETTING_GLOBAL);
 		} else {
 			await config.update(RULER_VSCODE_SETTING_KEY, [], IS_SETTING_GLOBAL);
@@ -29,10 +33,36 @@ async function toggleSetting() {
 	}
 }
 
+async function updateRulerPosition() {
+	try {
+		let config = vscode.workspace.getConfiguration();
+
+		const rulerPosition = config.get(RULER_POSITION_SETTING_KEY);
+		if (!rulerPosition) {
+			throw new Error('Ruler position is not set');
+		}
+
+		const currentRulerSetting = config.get(RULER_VSCODE_SETTING_KEY);
+		if (Array.isArray(currentRulerSetting) && currentRulerSetting.length > 0) {
+			await config.update(RULER_VSCODE_SETTING_KEY, [rulerPosition], IS_SETTING_GLOBAL);
+		}
+	} catch (error) {
+		vscode.window.showErrorMessage(
+			`Failed to update position of editor ruler. Reason: ${(error as Error).message}`
+		);
+	}
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Extension "Toggle Ruler" is activated.');
-	let disposable = vscode.commands.registerCommand('toggleRuler.toggle', toggleSetting);
-	context.subscriptions.push(disposable);
+	let commandDisposable = vscode.commands.registerCommand('toggleRuler.toggle', toggleSetting);
+	context.subscriptions.push(commandDisposable);
+
+	let cofigChangeDisposable = vscode.workspace.onDidChangeConfiguration(e => {
+		vscode.workspace.onDidChangeConfiguration(updateRulerPosition);
+	});
+
+	context.subscriptions.push(cofigChangeDisposable);
 }
 
 export function deactivate() {
